@@ -5,6 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -21,19 +26,29 @@ public class DatabaseUtility {
     public static final String STUDENT_AGE = "age";
     SQLiteDatabase db;
     MySqLiteHelper helper;
+    String destPath;
     public DatabaseUtility(Context context) {
-        helper = new MySqLiteHelper(context,DB_NAME,DB_VERSION);
+        destPath = "/data/data/" + context.getPackageName() + "/databases";
+        try {
+        File f = new File(destPath);
+        if (!f.exists()) {
+            f.mkdirs();
+            f.createNewFile();
+           copyDB(context.getAssets().open("studentDB"), new FileOutputStream(destPath + "/studentDB"));
+        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void open() {
-        db = helper.getWritableDatabase();
+
+        db = SQLiteDatabase.openDatabase(destPath + "/studentDB", null, SQLiteDatabase.OPEN_READWRITE);
     }
 
     public void close() {
-        if (db != null && db.isOpen()) {
+        if (db.isOpen())
             db.close();
-            helper.close();
-        }
     }
 public int getDate(){
     Calendar calendar = Calendar.getInstance();
@@ -92,5 +107,17 @@ public int getDate(){
         }
         cursor.close();
         return students;*/
+    }
+
+    public void copyDB(InputStream inputStream, OutputStream outputStream) throws IOException {
+        //---copy 1K bytes at a time---
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, length);
+        }
+        inputStream.close();
+        outputStream.close();
+
     }
 }
