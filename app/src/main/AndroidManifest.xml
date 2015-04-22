@@ -29,6 +29,11 @@
             android:name=".SearchName"
             android:label="@string/title_activity_search_name" >
         </activity>
+        <provider
+            android:authorities="StudentProvider"
+            android:name=".MyStudentProvider" >
+
+            </provider>
     </application>
 
 </manifest>

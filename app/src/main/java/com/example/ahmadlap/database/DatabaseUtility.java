@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Ahmad lap on 3/16/2015.
  */
 public class DatabaseUtility {
-    public static final String DB_NAME = "name";
+    public static final String DB_NAME = "studentDB";
     public static final int DB_VERSION = 4;
     public static  String STUDENT_TABLE = "student";
     public static final String STUDENT_ID = "_id";
@@ -59,6 +59,7 @@ public int getDate(){
     calendar.get(Calendar.HOUR_OF_DAY);
     calendar.get(Calendar.HOUR);
     calendar.set(Calendar.YEAR,1990);
+    calendar.set(Calendar.MONTH,Calendar.MAY);
 
     long time = calendar.getTimeInMillis();
 
@@ -93,7 +94,7 @@ public int getDate(){
     }
 
     public Cursor getAllStudents(){
-        List<Student> students = new ArrayList<Student>();
+//        List<Student> students = new ArrayList<Student>();
 //        String[] allColumns = {STUDENT_ID,STUDENT_NAME,STUDENT_AGE};
          return db.query(STUDENT_TABLE, null, null, null, null, null,null);
         /*cursor.moveToFirst();
